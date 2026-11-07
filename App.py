@@ -9,8 +9,7 @@ app = Flask(__name__)
 # ====================================
 # GEMINI AI SETUP
 # ====================================
-# Replace with your actual Google AI Studio API key
-GEMINI_API_KEY = "YOUR_API_KEY_HERE"
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_API_KEY_HERE")
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 # ====================================
@@ -24,7 +23,6 @@ S004,Shaurya Sen,40,10,0,5,1,919930992075"""
 
 LIVE_DF = None
 
-# Using a reliable hosted image of a blue pulse/chart as a direct Favicon fix
 FAVICON_URL = (
     "https://api.iconify.design/lucide:graduation-cap.svg?color=%230f172a"
 )
@@ -61,8 +59,6 @@ def calculate_engagement(student):
 
 def generate_root_cause_analysis(student):
   name = student["Name"]
-
-  # Fallback rule checks just in case of any network timeout
   causes = []
   if student["Attendance"] < 70:
     causes.append("low attendance")
@@ -79,7 +75,6 @@ def generate_root_cause_analysis(student):
         " academic patterns across all tracked indicators."
     )
 
-  # Dynamic Gemini AI Prompt
   prompt = f"""
     Analyze the following student risk indicators and write a concise, professional 2-sentence diagnostic summary for a school teacher or counselor.
     Student Name: {name}
@@ -189,13 +184,13 @@ def home():
     <html>
     <head>
         <title>Student Pulse - AI Early Warning System</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="manifest" href="/static/manifest.json">
     </head>
     <body class="bg-stone-50 text-stone-900 font-sans antialiased flex flex-col justify-between min-h-screen relative">
         
-        <!-- Loading Overlay with Analyzing Message -->
         <div id="loadingOverlay" class="fixed inset-0 bg-white/90 backdrop-blur-xs z-50 flex flex-col items-center justify-center hidden">
             <div class="w-10 h-10 border-3 border-stone-300 border-t-stone-900 rounded-full animate-spin mb-4"></div>
             <p class="text-sm font-semibold text-stone-900 tracking-tight">Analyzing student details...</p>
@@ -205,11 +200,11 @@ def home():
             </div>
         </div>
 
-        <header class="border-b border-stone-200 px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
+        <header class="border-b border-stone-200 px-6 sm:px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
             <span class="font-bold text-sm tracking-tight text-stone-800 flex items-center gap-2">
                 STUDENT PULSE <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
             </span>
-            <nav class="flex gap-6 text-xs font-medium text-stone-600">
+            <nav class="hidden sm:flex gap-6 text-xs font-medium text-stone-600">
                 <a href="/" class="text-stone-900 font-semibold">Home</a>
                 <a href="/about" class="hover:text-stone-900 transition">About Us</a>
                 <a href="/faq" class="hover:text-stone-900 transition">FAQs</a>
@@ -218,14 +213,14 @@ def home():
         </header>
         
         <main class="max-w-5xl mx-auto px-6 w-full py-12">
-            <div class="bg-white p-10 rounded-2xl border border-stone-200 shadow-2xs mb-8">
+            <div class="bg-white p-6 sm:p-10 rounded-2xl border border-stone-200 shadow-2xs mb-8">
                 <div class="max-w-2xl">
                     <span class="inline-block px-2.5 py-1 mb-3 rounded text-[10px] font-bold uppercase tracking-wider bg-stone-100 text-stone-700 border border-stone-200">Student Pulse AI - Capstone Project</span>
-                    <h1 class="text-3xl font-extrabold tracking-tight text-stone-900 mb-4">Institutional Student Analytics & Early Warning System</h1>
-                    <p class="text-sm text-stone-600 mb-8 leading-relaxed">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 mb-4">Institutional Student Analytics & Early Warning System</h1>
+                    <p class="text-xs sm:text-sm text-stone-600 mb-8 leading-relaxed">
                         A comprehensive administrative dashboard empowering faculty to track engagement metrics, execute AI risk diagnostics, form peer-support networks, and streamline parent communication.
                     </p>
-                    <div class="flex gap-3">
+                    <div class="flex flex-col sm:flex-row gap-3">
                         <a href="/demo" onclick="triggerLoader(event)" class="px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold rounded-lg transition shadow-xs text-center cursor-pointer">
                             Launch Demo Workspace
                         </a>
@@ -255,7 +250,7 @@ def home():
             </div>
         </main>
 
-        <footer class="border-t border-stone-200 px-8 py-4 flex justify-between items-center text-xs text-stone-400 bg-white">
+        <footer class="border-t border-stone-200 px-6 sm:px-8 py-4 flex flex-col sm:flex-row justify-between items-center text-xs text-stone-400 bg-white gap-2">
             <span>Academic Performance & Retention Engine</span>
             <div class="flex gap-4">
                 <a href="/about" class="hover:underline">About</a>
@@ -287,11 +282,12 @@ def about():
     <html>
     <head>
         <title>About Us - Student Pulse</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-stone-50 text-stone-900 font-sans antialiased flex flex-col justify-between min-h-screen">
-        <header class="border-b border-stone-200 px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
+        <header class="border-b border-stone-200 px-6 sm:px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
             <span class="font-bold text-sm tracking-tight text-stone-800">STUDENT PULSE</span>
             <nav class="flex gap-6 text-xs font-medium text-stone-600">
                 <a href="/" class="hover:text-stone-900 transition">Home</a>
@@ -302,7 +298,7 @@ def about():
         </header>
 
         <main class="max-w-2xl mx-auto px-6 w-full py-16">
-            <div class="bg-white p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
                 <h1 class="text-2xl font-bold tracking-tight text-stone-900">About the Project</h1>
                 <p class="text-xs text-stone-600 leading-relaxed">
                     Student Pulse is built as a capstone project to bridge the gap between institutional data and timely student intervention. By aggregating indicators such as attendance, participation metrics, extracurricular activities, and emotional well-being scores, our diagnostic engine highlights vulnerable student profiles before academic setbacks compound.
@@ -336,11 +332,12 @@ def faq():
     <html>
     <head>
         <title>FAQs - Student Pulse</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-stone-50 text-stone-900 font-sans antialiased flex flex-col justify-between min-h-screen">
-        <header class="border-b border-stone-200 px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
+        <header class="border-b border-stone-200 px-6 sm:px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
             <span class="font-bold text-sm tracking-tight text-stone-800">STUDENT PULSE</span>
             <nav class="flex gap-6 text-xs font-medium text-stone-600">
                 <a href="/" class="hover:text-stone-900 transition">Home</a>
@@ -351,7 +348,7 @@ def faq():
         </header>
 
         <main class="max-w-2xl mx-auto px-6 w-full py-16">
-            <div class="bg-white p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
                 <h1 class="text-2xl font-bold tracking-tight text-stone-900">Frequently Asked Questions</h1>
                 
                 <div class="space-y-4 text-xs text-stone-700">
@@ -396,11 +393,12 @@ def contact():
     <html>
     <head>
         <title>Contact Us - Student Pulse</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-stone-50 text-stone-900 font-sans antialiased flex flex-col justify-between min-h-screen">
-        <header class="border-b border-stone-200 px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
+        <header class="border-b border-stone-200 px-6 sm:px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
             <span class="font-bold text-sm tracking-tight text-stone-800">STUDENT PULSE</span>
             <nav class="flex gap-6 text-xs font-medium text-stone-600">
                 <a href="/" class="hover:text-stone-900 transition">Home</a>
@@ -411,7 +409,7 @@ def contact():
         </header>
 
         <main class="max-w-2xl mx-auto px-6 w-full py-16">
-            <div class="bg-white p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xs border border-stone-200 space-y-6">
                 <h1 class="text-2xl font-bold tracking-tight text-stone-900">Project Development Team</h1>
                 <p class="text-xs text-stone-600 leading-relaxed">
                     For technical inquiries, system evaluation, or administrative support, please reach out directly to the project development team below.
@@ -459,17 +457,18 @@ def upload_page():
     <html>
     <head>
         <title>Upload Dataset - Student Pulse</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-stone-50 text-stone-900 font-sans antialiased flex flex-col justify-between min-h-screen">
-        <header class="border-b border-stone-200 px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
+        <header class="border-b border-stone-200 px-6 sm:px-8 py-4 flex justify-between items-center bg-white shadow-2xs">
             <span class="font-bold text-sm tracking-tight text-stone-800">STUDENT PULSE</span>
             <a href="/" class="text-xs font-medium text-stone-500 hover:text-stone-900 transition">Back</a>
         </header>
 
         <main class="max-w-md mx-auto px-6 w-full py-16">
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-stone-200">
                 <h1 class="text-xl font-bold tracking-tight text-stone-900 mb-1">Dataset Ingestion</h1>
                 <p class="text-xs text-stone-500 mb-6">Upload your district CSV file containing student records.</p>
                 
@@ -538,13 +537,13 @@ def dashboard(mode):
     <html>
     <head>
         <title>Dashboard - Student Pulse</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" href="{FAVICON_URL}">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-stone-100 text-stone-900 font-sans antialiased min-h-screen">
     
-    <!-- Top Nav -->
-    <header class="bg-white border-b border-stone-200 px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 shadow-xs">
+    <header class="bg-white border-b border-stone-200 px-6 sm:px-8 py-3.5 flex justify-between items-center sticky top-0 z-50 shadow-xs">
         <div class="flex items-center gap-3">
             <span class="font-bold text-sm tracking-tight text-stone-900">STUDENT PULSE</span>
             <span class="text-[10px] px-2 py-0.5 rounded font-medium uppercase bg-stone-100 text-stone-600 border border-stone-200">Mode: {mode}</span>
@@ -554,9 +553,8 @@ def dashboard(mode):
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-8 py-8">
-        <!-- Overview Metrics -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-2xs">
                 <p class="text-xs font-medium text-stone-500 uppercase tracking-wider">Total Enrolled</p>
                 <p class="text-2xl font-bold text-stone-900 mt-1">{total_students}</p>
@@ -575,7 +573,6 @@ def dashboard(mode):
             </div>
         </div>
 
-        <!-- Analytics & Trend Analysis Section -->
         <div class="bg-white p-6 rounded-lg border border-stone-200 shadow-2xs mb-8">
             <h2 class="text-sm font-bold text-stone-900 mb-4 tracking-tight">Institutional Trend & Risk Distribution Analysis</h2>
             
@@ -614,7 +611,6 @@ def dashboard(mode):
             </div>
         </div>
 
-        <!-- Search Filter -->
         <div class="mb-6">
             <form method="GET" class="flex gap-2 max-w-sm">
                 <input type="text" name="search" placeholder="Search by student name..." class="px-3 py-2 text-xs rounded border border-stone-300 bg-white text-stone-900 w-full focus:outline-none focus:ring-1 focus:ring-stone-900">
@@ -622,7 +618,6 @@ def dashboard(mode):
             </form>
         </div>
 
-        <!-- Grid of Student Cards (2 Columns per Row) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     """
 
