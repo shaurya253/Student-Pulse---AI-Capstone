@@ -26,6 +26,7 @@ LIVE_DF = None
 FAVICON_URL = (
     "https://api.iconify.design/lucide:graduation-cap.svg?color=%230f172a"
 )
+<link rel="icon" type="image/png" href="{FAVICON_URL}">
 
 # ====================================
 # ENGINE FUNCTIONS
